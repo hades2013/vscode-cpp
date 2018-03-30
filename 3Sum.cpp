@@ -95,12 +95,84 @@ vector<vector<int>> threeSumB(vector<int>& nums) {
     return triples;
 }
 
+//using combination method could meet <<Time Limit Exceeded>> error
+vector<vector<int> > combination(vector<int> &v, int k);
+bool isSumZero(vector<int>& v);
+int sum(vector<int>& v);
+
+vector<vector<int>> threeSumC(vector<int> &num){
+    vector< vector<int> > result;
+    vector< vector<int> > r = combination(num, 3);
+    for (int i=0; i<r.size(); i++){
+        if (isSumZero(r[i])){
+            result.push_back(r[i]);
+        }
+    }
+    return result;
+}
+bool isSumZero(vector<int>& v){
+    return sum(v)==0;
+}
+
+int sum(vector<int>& v){
+    int s=0;
+    for(int i=0; i<v.size(); i++){
+        s += v[i];
+    }
+    return s;
+}
+
+vector<vector<int> > combination(vector<int> &v, int k) {
+
+    vector<vector<int> > result;
+    vector<int> d;
+    int n = v.size();
+    for (int i=0; i<n; i++){
+        d.push_back( (i<k) ? 1 : 0 );
+    }
+
+    //1) from the left, find the [1,0] pattern, change it to [0,1]
+    //2) move all of the 1 before the pattern to the most left side
+    //3) check all of 1 move to the right
+    while(1){
+        vector<int> tmp;
+        for(int x=0; x<n; x++){
+            if (d[x]) tmp.push_back(v[x]);
+        }
+        sort(tmp.begin(), tmp.end());
+        result.push_back(tmp);
+        //step 1), find [1,0] pattern
+        int i;
+        bool found = false;
+        int ones =0;
+        for(i=0; i<n-1; i++){
+
+            if (d[i]==1 && d[i+1]==0){
+                d[i]=0; d[i+1]=1;
+                found = true;
+                //step 2) move all of right 1 to the most left side
+                for (int j=0; j<i; j++){
+                    d[j]=( ones > 0 ) ? 1 : 0;
+                    ones--;
+                }
+                break;
+            }
+            if (d[i]==1) ones++;
+        }
+        if (!found){
+            break;
+        }
+
+    }
+    return result;
+}
+
 int main()
 {
     //int a[] = {-1, 0, 1, 2, -1, 1, -4};
     int a[] = {-1, 1, 1, 1, -1, -1, 0,0,0};
     vector<int> n(a, a+sizeof(a)/sizeof(int));
-    vector< vector<int> > result = threeSumB(n);
+    vector< vector<int> > result = threeSumC(n);
     printMatrix(result);    
     return 0; 
 }

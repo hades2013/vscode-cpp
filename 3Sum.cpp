@@ -24,7 +24,7 @@
 using namespace std; 
 
 
-vector<vector<int>> threeSum(vector<int> &num){
+vector<vector<int>> threeSumA(vector<int> &num){
     vector<vector<int>> result; 
     if(num.size()==0 || num.size()==1 || num.size() == 2) 
         return result;
@@ -78,12 +78,29 @@ void printMatrix(vector<vector<int>> &matrix)
     cout<<endl; 
 }
 
+vector<vector<int>> threeSumB(vector<int>& nums) {
+    vector<vector<int>> triples;
+    sort(nums.begin(), nums.end());
+    int i = 0, last = nums.size() - 1;
+    while (i < last) {
+    int a = nums[i], j = i+1, k = last;
+        while (j < k) {
+            int b = nums[j], c = nums[k], sum = a+b+c;
+            if (sum == 0) triples.push_back({a, b, c});
+            if (sum <= 0) while (nums[j] == b && j < k) j++;
+            if (sum >= 0) while (nums[k] == c && j < k) k--;        
+            }
+        while (nums[i] == a && i < last) i++;
+    }
+    return triples;
+}
+
 int main()
 {
     //int a[] = {-1, 0, 1, 2, -1, 1, -4};
     int a[] = {-1, 1, 1, 1, -1, -1, 0,0,0};
     vector<int> n(a, a+sizeof(a)/sizeof(int));
-    vector< vector<int> > result = threeSum(n);
+    vector< vector<int> > result = threeSumB(n);
     printMatrix(result);    
     return 0; 
 }
